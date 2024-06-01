@@ -8,6 +8,7 @@
   const todoAlert = document.querySelector(".todo__alert");
 
   let tasks = [];
+  let isEventListenersAdded = false;
 
   const API_URL = "http://127.0.0.1:9000/v1/tasks";
 
@@ -97,12 +98,16 @@
     const modalInputDate = document.querySelector(".modal__input--date");
     const modalXIcon = document.querySelector(".fa-xmark");
 
-    modalInputDate.addEventListener("change", () => {
-      updateTaskDate(taskItem, modalInputDate.value);
-      closeModal(modal);
-    });
+    if (!isEventListenersAdded) {
+      modalInputDate.addEventListener("change", () => {
+        updateTaskDate(taskItem, modalInputDate.value);
+        closeModal(modal);
+      });
+    }
 
     modalXIcon.addEventListener("click", () => closeModal(modal));
+
+    isEventListenersAdded = true;
   };
 
   const deleteTask = async (e) => {
