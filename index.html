@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/7a5ea5d2cb.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Todo List</title>
+    <script src="main.js" defer></script>
+  </head>
+  <body>
+    <main class="todo">
+      <section class="todo__alert"></section>
+      <h1 class="todo__title">Todo List</h1>
+      <form class="todo__form">
+        <input type="datetime-local" class="todo__input todo__input--date" />
+        <input
+          type="text"
+          class="todo__input todo__input--task"
+          placeholder="Write your to do"
+          required
+        />
+        <button type="submit" class="todo__btn todo__btn--add">Add</button>
+      </form>
+      <div class="todo__searches">
+        <input type="text" class="todo__input todo__input--search-text" />
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="date" class="todo__input todo__input--search-date" />
+      </div>
+      <ul class="todo__list"></ul>
+    </main>
+  </body>
+</html>
