@@ -3,6 +3,8 @@
 (() => {
   const todoForm = document.querySelector(".todo__form");
   const todoList = document.querySelector(".todo__list");
+  const todoSearchText = document.querySelector(".todo__input--search-text");
+  const todoSearchDate = document.querySelector(".todo__input--search-date");
 
   let tasks = [];
 
@@ -59,6 +61,36 @@
     taskItem.appendChild(taskTrashIcon);
 
     todoList.appendChild(taskItem);
+  };
+
+  const handleFilterByDescription = (e) => {
+    const value = e.target.value.toLowerCase();
+    const filteredTasks = tasks.filter((task) =>
+      task.description.toLowerCase().includes(value)
+    );
+
+    todoList.innerHTML = "";
+
+    filteredTasks.length === 0
+      ? (todoList.textContent = "Sorry, no todo matched your search")
+      : filteredTasks.forEach(displayTasks);
+  };
+
+  const handleFilterByDate = (e) => {
+    todoList.innerHTML = "";
+
+    if (e.target.value === "") {
+      tasks.forEach(displayTasks);
+      return;
+    }
+
+    const value = formatToIsoString(e.target.value);
+    const filteredTasks = tasks.filter(
+      (task) => formatToIsoString(task.end_date) === value
+    );
+    filteredTasks.length === 0
+      ? (todoList.textContent = "Sorry, no todo matched your search")
+      : filteredTasks.forEach(displayTasks);
   };
 
   const deleteTask = async (e) => {
@@ -143,4 +175,6 @@
 
   // addEventListeners
   todoForm.addEventListener("submit", handleFormSubmit);
+  todoSearchText.addEventListener("input", handleFilterByDescription);
+  todoSearchDate.addEventListener("change", handleFilterByDate);
 })();
