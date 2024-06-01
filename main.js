@@ -5,10 +5,26 @@
   const todoList = document.querySelector(".todo__list");
   const todoSearchText = document.querySelector(".todo__input--search-text");
   const todoSearchDate = document.querySelector(".todo__input--search-date");
+  const todoAlert = document.querySelector(".todo__alert");
 
   let tasks = [];
 
   const API_URL = "http://127.0.0.1:9000/v1/tasks";
+
+  const displayAlert = (action) => {
+    if (action === "delete") {
+      todoAlert.textContent = "Todo Removed";
+      todoAlert.style.backgroundColor = "red";
+    } else if (action === "create") {
+      todoAlert.textContent = "Todo Added To The List";
+      todoAlert.style.backgroundColor = "green";
+    }
+
+    setTimeout(() => {
+      todoAlert.textContent = "";
+      todoAlert.style.backgroundColor = "transparent";
+    }, 700);
+  };
 
   const formatToIsoString = (date = new Date()) => {
     const formatedDate = new Date(date).toISOString().split("T")[0];
@@ -103,6 +119,7 @@
       });
 
       taskItem.remove();
+      displayAlert("delete");
     } catch (error) {
       throw new Error(error);
     }
@@ -129,6 +146,7 @@
           end_date: endDate,
         }),
       });
+      displayAlert("create");
     } catch (error) {
       throw new Error(error);
     }
