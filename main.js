@@ -8,6 +8,57 @@
 
   const API_URL = "http://127.0.0.1:9000/v1/tasks";
 
+  const formatToIsoString = (date = new Date()) => {
+    const formatedDate = new Date(date).toISOString().split("T")[0];
+    return formatedDate;
+  };
+
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (response.status === 204) {
+        return [];
+      } else if (!response.ok) {
+        throw new Error(response.status);
+      }
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const displayTasks = (task) => {
+    const { label, description, end_date } = task;
+    const endDate = formatToIsoString(end_date);
+
+    const taskItem = document.createElement("li");
+    taskItem.id = label;
+    taskItem.classList.add("todo__item");
+
+    const today = formatToIsoString();
+    const isExpired = formatToIsoString(end_date) < today;
+
+    if (isExpired) {
+      taskItem.classList.add("todo__item--expired");
+    }
+
+    const taskDescription = document.createElement("p");
+    taskDescription.classList.add("todo__description");
+    taskDescription.textContent = description;
+    const taskDate = document.createElement("span");
+    taskDate.classList.add("todo__date");
+    taskDate.textContent = endDate;
+    const taskTrashIcon = document.createElement("i");
+    taskTrashIcon.classList.add("fa-solid", "fa-trash");
+
+    taskItem.appendChild(taskDate);
+    taskItem.appendChild(taskDescription);
+    taskItem.appendChild(taskTrashIcon);
+
+    todoList.appendChild(taskItem);
+  };
+
   const createTask = async (taskData, endDate) => {
     const taskLabel = taskData.label;
 
@@ -60,7 +111,18 @@
 
     tasks.push({ ...taskData, end_date: endDate });
     tasks = sortTasks(tasks);
+
+    todoList.innerHTML = "";
+    tasks.forEach(displayTasks);
   };
+
+  fetchTasks()
+    .then((newTasks) => {
+      tasks = newTasks;
+      tasks = sortTasks(tasks);
+      tasks.forEach(displayTasks);
+    })
+    .catch((error) => console.log(error));
 
   // addEventListeners
   todoForm.addEventListener("submit", handleFormSubmit);
