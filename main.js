@@ -52,11 +52,28 @@
     const taskTrashIcon = document.createElement("i");
     taskTrashIcon.classList.add("fa-solid", "fa-trash");
 
+    taskTrashIcon.addEventListener("click", deleteTask);
+
     taskItem.appendChild(taskDate);
     taskItem.appendChild(taskDescription);
     taskItem.appendChild(taskTrashIcon);
 
     todoList.appendChild(taskItem);
+  };
+
+  const deleteTask = async (e) => {
+    const taskItem = e.target.closest("li");
+    const taskLabel = taskItem.id;
+
+    try {
+      await fetch(`${API_URL}/${taskLabel}`, {
+        method: "DELETE",
+      });
+
+      taskItem.remove();
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   const createTask = async (taskData, endDate) => {
