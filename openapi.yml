@@ -1,0 +1,170 @@
+openapi: 3.0.0
+info:
+  description: "Welcome to Ringover TodoList. "
+  version: "1.0.0"
+  title: Ringover
+  x-logo:
+    url: https://webcdn.ringover.com/app/img/misc/logo_app_redoc.png
+    backgroundColor: "#FAFAFA"
+    altText: Ringover Logo
+  contact:
+    email: support@ringover.com
+tags:
+  - name: tasks
+    description: Tasks TodoList
+servers:
+  - url: http://127.0.0.1:9000/v1
+    description: Testing server
+paths:
+  /tasks:
+    get:
+      tags:
+        - tasks
+      summary: Get all tasks
+      description: Get all tasks
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/task"
+        204:
+          description: List empty
+        500:
+          description: Internal server error
+    post:
+      tags:
+        - tasks
+      summary: Create new task
+      description: Create new task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addTask'
+        required: true
+      responses:
+        201:
+          description: Created
+        400:
+          description: Bad request
+        409:
+          description: Already exist
+        500:
+          description: Internal server error
+  /tasks/{label}:
+    get:
+      tags:
+        - tasks
+      summary: Get a specified tasks
+      description: Get a specified tasks
+      parameters:
+        - in: path
+          name: label
+          description: The task identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/task"
+        201:
+          description: not content
+        404:
+          description: Task not found
+        500:
+          description: Internal server error
+    delete:
+      tags:
+        - tasks
+      summary: Delete a specified tasks
+      description: Delete a specified tasks
+      parameters:
+        - in: path
+          name: label
+          description: The task identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successful operation
+        404:
+          description: Task not found
+        500:
+          description: Internal server error
+    put:
+      tags:
+        - tasks
+      summary: Update task
+      description: Update task
+      parameters:
+        - in: path
+          name: label
+          description: The task identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/updateTask'
+        required: true
+      responses:
+        200:
+          description: Updated
+        404:
+          description: Not Found
+        400:
+          description: Bad request
+        500:
+          description: Internal server error
+components:
+  schemas:
+    updateTask:
+      type: object
+      properties:
+        end_date:
+          type: string
+          format: date-time
+          example: "2022-01-01T15:00:00Z"
+    addTask:
+      type: object
+      properties:
+        label:
+          type: string
+          example: "labeltasks"
+        description:
+          type: string
+          example: "tasks"
+        start_date:
+          type: string
+          format: date-time
+          example: "2022-01-01T12:00:00Z"
+    task:
+      type: object
+      properties:
+        label:
+          type: string
+          example: "labeltasks"
+        description:
+          type: string
+          example: "tasks"
+        start_date:
+          type: string
+          format: date-time
+          example: "2022-01-01T12:00:00Z"
+        end_date:
+          type: string
+          format: date-time
+          example: "2022-01-01T15:00:00Z"
+    tasks:
+      type: array
+      items:
+      $ref: '#/components/schemas/task'
