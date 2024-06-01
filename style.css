@@ -1,0 +1,239 @@
+:root {
+  --color-primary: #7fa3fe;
+  --color-secondary: #27c9d6;
+  --color-white: #ffffff;
+  --color-gray: #f1f5f8;
+  --color-red: #e41c38;
+  --color-dark-red: #aa0000;
+
+  --linear-background: linear-gradient(
+    116deg,
+    rgba(39, 201, 214, 0.2) 1.37%,
+    rgba(127, 163, 254, 0.2) 55.82%,
+    rgba(91, 107, 225, 0.2) 99.49%
+  );
+  --linear-todo-item-background: linear-gradient(
+    90deg,
+    rgba(39, 201, 214, 1) 38%,
+    rgba(44, 202, 215, 1) 40%,
+    rgba(202, 238, 247, 1) 100%
+  );
+  --linear-todo-item-before-background: linear-gradient(
+    90deg,
+    rgba(114, 151, 247, 1) 35%,
+    rgba(157, 141, 222, 1) 100%
+  );
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background: var(--linear-background);
+}
+
+.todo {
+  margin: 0 auto;
+  margin-top: 5rem;
+  width: 90vw;
+  max-width: 45rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: var(--color-white);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.todo__alert {
+  height: 1.5rem;
+  line-height: 1.5rem;
+  width: 100%;
+  text-align: center;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  margin-bottom: 0.7rem;
+}
+
+.todo__title {
+  letter-spacing: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.todo__form {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.todo__input {
+  border: none;
+  outline: none;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: var(--color-gray);
+  border-radius: 5px 0 0 5px;
+  margin-bottom: 0.5rem;
+}
+
+.todo__input--date {
+  flex: 1 0 30%;
+  margin-right: 0.5rem;
+  border-radius: 5px;
+}
+
+.todo__input--task {
+  flex: 1 0 50%;
+}
+
+.todo__btn {
+  border: none;
+  flex: 1 0 5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--color-primary);
+  border-radius: 0 5px 5px 0;
+  letter-spacing: 0.1rem;
+  transition: all 0.3s linear;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.todo__btn:hover {
+  background-color: var(--color-secondary);
+  color: var(--color-gray);
+}
+
+.todo__searches {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.todo__input--search-text {
+  flex: 1 0 auto;
+  border-radius: 5px;
+}
+
+.fa-magnifying-glass {
+  position: absolute;
+  top: 23%;
+  left: 50%;
+}
+
+.todo__input--search-date {
+  flex: 1 0 auto;
+  border-radius: 5px;
+}
+
+.todo__list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.todo__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s linear;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
+  background: var(--linear-todo-item-background);
+  box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+  z-index: 1;
+  position: relative;
+}
+
+.todo__item:hover {
+  transform: translateY(-2px);
+}
+
+.todo__item::before {
+  position: absolute;
+  content: "";
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--linear-todo-item-before-background);
+  z-index: -1;
+  transition: opacity 0.5s linear;
+  opacity: 0;
+  border-radius: 5px;
+}
+
+.todo__item:hover::before {
+  opacity: 1;
+}
+
+.todo__item--expired {
+  opacity: 0.5;
+  background-color: var(--color-gray);
+  position: relative;
+}
+
+.todo__date {
+  font-size: 0.8rem;
+  min-width: 20%;
+}
+
+.todo__description {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.fa-trash {
+  color: var(--color-red);
+  cursor: pointer;
+  transition: all 0.3s linear;
+}
+
+.fa-trash:hover {
+  color: var(--color-dark-red);
+}
+
+@media screen and (max-width: 571px) {
+  .todo__input--task,
+  .todo__btn {
+    border-radius: 5px;
+  }
+}
+
+@media screen and (max-width: 512px) {
+  .fa-magnifying-glass {
+    top: 8%;
+    left: 92%;
+  }
+}
+
+@media screen and (max-width: 444px) {
+  .todo__input--task {
+    border-radius: 5px 0 0 5px;
+  }
+
+  .todo__btn {
+    border-radius: 0 5px 5px 0;
+  }
+}
+
+@media screen and (max-width: 412px) {
+  .todo__input--task,
+  .todo__btn {
+    border-radius: 5px;
+  }
+}
