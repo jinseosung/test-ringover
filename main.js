@@ -18,6 +18,9 @@
     } else if (action === "create") {
       todoAlert.textContent = "Todo Added To The List";
       todoAlert.style.backgroundColor = "green";
+    } else if (action === "modify") {
+      todoAlert.textContent = "Todo Changed";
+      todoAlert.style.backgroundColor = "skyblue";
     }
 
     setTimeout(() => {
@@ -46,6 +49,79 @@
     }
   };
 
+  const closeModal = (modal) => {
+    modal.classList.add("display-non");
+  };
+
+  const updateTaskDate = async (taskItem, newDate) => {
+    const taskLabel = taskItem.id;
+    const newEndDate = new Date(newDate).toISOString();
+
+    try {
+      await fetch(`${API_URL}/${taskLabel}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          end_date: newEndDate,
+        }),
+      });
+      displayAlert("modify");
+    } catch (error) {
+      throw new Error(error);
+    }
+
+    tasks = tasks.map((task) => {
+      if (task.label === taskLabel) {
+        return {
+          ...task,
+          end_date: newEndDate,
+        };
+      }
+      return task;
+    });
+
+    tasks = sortTasks(tasks);
+
+    todoList.innerHTML = "";
+    tasks.forEach(displayTasks);
+  };
+
+  const modifyTask = async (e) => {
+    const taskItem = e.target.closest("li");
+    const modal = document.querySelector(".modal");
+    modal.classList.remove("display-non");
+    const modalDescription = document.querySelector(".modal__description");
+    modalDescription.textContent = taskItem.children[1].textContent;
+    const modalInputDate = document.querySelector(".modal__input--date");
+    const modalXIcon = document.querySelector(".fa-xmark");
+
+    modalInputDate.addEventListener("change", () => {
+      updateTaskDate(taskItem, modalInputDate.value);
+      closeModal(modal);
+    });
+
+    modalXIcon.addEventListener("click", () => closeModal(modal));
+  };
+
+  const deleteTask = async (e) => {
+    const taskItem = e.target.closest("li");
+    const taskLabel = taskItem.id;
+
+    try {
+      await fetch(`${API_URL}/${taskLabel}`, {
+        method: "DELETE",
+      });
+
+      taskItem.remove();
+      tasks = tasks.filter((task) => task.label !== taskLabel);
+      displayAlert("delete");
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
   const displayTasks = (task) => {
     const { label, description, end_date } = task;
     const endDate = formatToIsoString(end_date);
@@ -67,14 +143,21 @@
     const taskDate = document.createElement("span");
     taskDate.classList.add("todo__date");
     taskDate.textContent = endDate;
+    const taskIcons = document.createElement("div");
+    taskIcons.classList.add("todo__icons");
+    const taskModifyIcon = document.createElement("i");
+    taskModifyIcon.classList.add("fa-solid", "fa-pen-to-square");
     const taskTrashIcon = document.createElement("i");
     taskTrashIcon.classList.add("fa-solid", "fa-trash");
 
+    taskModifyIcon.addEventListener("click", modifyTask);
     taskTrashIcon.addEventListener("click", deleteTask);
 
+    taskIcons.appendChild(taskModifyIcon);
+    taskIcons.appendChild(taskTrashIcon);
     taskItem.appendChild(taskDate);
     taskItem.appendChild(taskDescription);
-    taskItem.appendChild(taskTrashIcon);
+    taskItem.appendChild(taskIcons);
 
     todoList.appendChild(taskItem);
   };
@@ -107,22 +190,6 @@
     filteredTasks.length === 0
       ? (todoList.textContent = "Sorry, no todo matched your search")
       : filteredTasks.forEach(displayTasks);
-  };
-
-  const deleteTask = async (e) => {
-    const taskItem = e.target.closest("li");
-    const taskLabel = taskItem.id;
-
-    try {
-      await fetch(`${API_URL}/${taskLabel}`, {
-        method: "DELETE",
-      });
-
-      taskItem.remove();
-      displayAlert("delete");
-    } catch (error) {
-      throw new Error(error);
-    }
   };
 
   const createTask = async (taskData, endDate) => {
